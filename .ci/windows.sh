@@ -1,10 +1,12 @@
-#!/bin/sh -ex
+#!/usr/bin/env bash
+set -ex
 
-mkdir build
+mkdir -p build
 cd build
 
-if [ "$GITHUB_REF_TYPE" == "tag" ]; then
-	export EXTRA_CMAKE_FLAGS=(-DENABLE_QT_UPDATE_CHECKER=ON)
+EXTRA_CMAKE_FLAGS=()
+if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+    EXTRA_CMAKE_FLAGS+=(-DENABLE_QT_UPDATE_CHECKER=ON)
 fi
 
 cmake .. -G Ninja \
@@ -13,7 +15,10 @@ cmake .. -G Ninja \
     -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
     -DENABLE_QT_TRANSLATION=ON \
     -DUSE_DISCORD_PRESENCE=ON \
-	"${EXTRA_CMAKE_FLAGS[@]}"
+    -DENABLE_FFMPEG=OFF \
+    -DQT_DOWNLOAD_VERSION=6.7.3 \
+    "${EXTRA_CMAKE_FLAGS[@]}"
+
 ninja
 ninja bundle
 strip -s bundle/*.exe
