@@ -127,6 +127,7 @@ option(USE_SYSTEM_XXHASH "Use the system xxHash lib (instead of the bundled one)
 option(ENABLE_QT "Enable the Qt frontend" ON)
 option(ENABLE_QT_TRANSLATION "Enable translations for the Qt frontend" OFF)
 option(ENABLE_QT_UPDATE_CHECKER "Enable built-in update checker for the Qt frontend" OFF)
+set(QT_DOWNLOAD_VERSION "6.9.3" CACHE STRING "Qt version to download for bundled Qt builds")
 
 CMAKE_DEPENDENT_OPTION(ENABLE_TESTS "Enable generating tests executable" ON "NOT IOS" OFF)
 CMAKE_DEPENDENT_OPTION(ENABLE_ROOM "Enable dedicated room functionality" ON "NOT ANDROID AND NOT IOS" OFF)
@@ -401,7 +402,7 @@ endif()
 
 if (ENABLE_QT)
     if (NOT USE_SYSTEM_QT)
-        download_qt(6.9.3)
+        download_qt("${QT_DOWNLOAD_VERSION}")
     endif()
 
     find_package(Qt6 REQUIRED COMPONENTS Widgets Multimedia Concurrent)
